@@ -1,0 +1,407 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Activity Fitness Tracker: Exploratory Analysis},
+            pdfauthor={Rebecca Elizabeth Kitching},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{Activity Fitness Tracker: Exploratory Analysis}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Rebecca Elizabeth Kitching}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{04/04/2018}
+
+
+\begin{document}
+\maketitle
+
+\subsection{Introduction}\label{introduction}
+
+It is now possible to collect a large amount of data about personal
+movement using activity monitoring devices such as a
+\href{http://www.fitbit.com}{Fitbit},
+\href{http://www.nike.com/us/en_us/c/nikeplus-fuelband}{Nike Fuelband},
+or \href{https://jawbone.com/up}{Jawbone Up}. These type of devices are
+part of the ``quantified self'' movement -- a group of enthusiasts who
+take measurements about themselves regularly to improve their health, to
+find patterns in their behavior, or because they are tech geeks. But
+these data remain under-utilized both because the raw data are hard to
+obtain and there is a lack of statistical methods and software for
+processing and interpreting the data.
+
+This project makes use of data from a personal activity monitoring
+device. This device collects data at 5 minute intervals through out the
+day. The data consists of two months of data from an anonymous
+individual collected during the months of October and November, 2012 and
+include the number of steps taken in 5 minute intervals each day.
+
+\section{Loading and preprocessing the
+data}\label{loading-and-preprocessing-the-data}
+
+1.Here we want to first load the data set
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setwd}\NormalTok{(}\StringTok{'/Users/rek514/Documents/Data_science/Git_hub/RepData_PeerAssessment1'}\NormalTok{)}
+
+\CommentTok{# Load in packages needed for later}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(lattice)}
+
+\CommentTok{# Stops numbers being shown in Scientific notation and set decimal places to 3}
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{scipen=}\DecValTok{99999}\NormalTok{, }\DataTypeTok{digits=}\DecValTok{3}\NormalTok{)}
+
+\CommentTok{# Load dataset into R}
+\NormalTok{dataset <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{'activity.csv'}\NormalTok{)}
+\CommentTok{# Convert the date column into a date data class}
+\NormalTok{dataset$date <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(dataset$date, }\DataTypeTok{format =} \StringTok{'%Y/%m/%d'}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{What is the mean total number of steps taken per
+day?}\label{what-is-the-mean-total-number-of-steps-taken-per-day}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  First we need to find the total number of steps per day
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Group the data by date}
+\NormalTok{date_grouped <-}\StringTok{ }\KeywordTok{group_by}\NormalTok{(dataset, date)}
+\CommentTok{# Calculate the total sum of steps for each day}
+\NormalTok{step_total <-}\StringTok{ }\KeywordTok{summarise}\NormalTok{(date_grouped,}\DataTypeTok{Steps=}\KeywordTok{sum}\NormalTok{(steps, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Next we want to generate a histogram of these step totals.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create a histogram with the total step data}
+\KeywordTok{hist}\NormalTok{(step_total$Steps,}\DataTypeTok{breaks=}\DecValTok{15}\NormalTok{, }\DataTypeTok{col=}\StringTok{'magenta'}\NormalTok{, }\DataTypeTok{main =} \StringTok{'Total Daily Steps'}\NormalTok{,}
+     \DataTypeTok{xlab=}\StringTok{'Total Steps'}\NormalTok{, }\DataTypeTok{ylab =}\StringTok{'Frequency'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{FitbitTracker_files/figure-latex/histogram-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Finally we want to find the mean and median number of daily steps
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Calculate the mean and median for the daily step total}
+\NormalTok{stepmean <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(step_total$Steps)}
+\NormalTok{stepmedian <-}\StringTok{ }\KeywordTok{median}\NormalTok{(step_total$Steps)}
+\end{Highlighting}
+\end{Shaded}
+
+The \textbf{mean} daily step count is 9354.23 and the \textbf{median} is
+10395.
+
+\section{What is the average daily activity
+pattern?}\label{what-is-the-average-daily-activity-pattern}
+
+1.First we want to plot the average number of steps taken across the
+whole day.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Group the data by interval}
+\NormalTok{interval_grouped <-}\StringTok{ }\KeywordTok{group_by}\NormalTok{(dataset, interval)}
+\CommentTok{# Calculate the total sum of steps for each interval during the day}
+\NormalTok{intstep_total <-}\StringTok{ }\KeywordTok{summarise}\NormalTok{(interval_grouped,}\DataTypeTok{Steps=}\KeywordTok{mean}\NormalTok{(steps, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{))}
+\CommentTok{# Plot a line graph to show the step count across the day}
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x=}\NormalTok{intstep_total$interval, }\DataTypeTok{y=}\NormalTok{intstep_total$Steps, }\DataTypeTok{type=}\StringTok{'l'}\NormalTok{,}
+     \DataTypeTok{main=}\StringTok{'Average step count across the day'}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{'Interval'}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{'Total Steps'}\NormalTok{, }\DataTypeTok{lwd=}\FloatTok{2.5}\NormalTok{, }\DataTypeTok{col=}\StringTok{'blue'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{FitbitTracker_files/figure-latex/time-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Next we want to find out during which time point were the most steps
+  taken?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{intervalmax <-}\StringTok{ }\NormalTok{intstep_total$interval[}\KeywordTok{which.max}\NormalTok{(intstep_total$Steps)]}
+\end{Highlighting}
+\end{Shaded}
+
+In this individual, they made the most steps during the 835th interval.
+
+\section{Imputing missing values}\label{imputing-missing-values}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Calculate and report the total number of missing values in the dataset
+  (i.e.~the total number of rows with 𝙽𝙰s)
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{missingtotal <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(dataset$steps))}
+\end{Highlighting}
+\end{Shaded}
+
+The total number of missing values is 2304.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  We now want to replace these missing values with the mean for that
+  corresponding interval. These are saved in a new data set.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create a new data set}
+\NormalTok{na_dataset <-}\StringTok{ }\NormalTok{dataset}
+\CommentTok{# Loop through each of the data set entries}
+\NormalTok{for (i in }\DecValTok{1}\NormalTok{:(}\KeywordTok{dim}\NormalTok{(na_dataset)[}\DecValTok{1}\NormalTok{])) \{}
+  \CommentTok{# Check if the steps value is NA}
+  \NormalTok{if (}\KeywordTok{is.na}\NormalTok{(na_dataset$steps[i])) \{}
+    \CommentTok{# Find the correct interval index value}
+    \NormalTok{interval_index <-}\StringTok{ }\KeywordTok{match}\NormalTok{(na_dataset$interval[i], intstep_total$interval)}
+    \CommentTok{# Replace the NA with the interval mean value}
+    \NormalTok{na_dataset$steps[i] <-}\StringTok{ }\NormalTok{intstep_total$Steps[interval_index] \}}
+  \NormalTok{else \{\}\}}
+\end{Highlighting}
+\end{Shaded}
+
+4.Finally we want to calculate the total mean and median number of steps
+per day and plot the total daily step count in a histogram.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Group the data by date}
+\NormalTok{date_grouped <-}\StringTok{ }\KeywordTok{group_by}\NormalTok{(na_dataset, date)}
+\CommentTok{# Calculate the total sum of steps for each day}
+\NormalTok{na_step_total <-}\StringTok{ }\KeywordTok{summarise}\NormalTok{(date_grouped,}\DataTypeTok{Steps=}\KeywordTok{sum}\NormalTok{(steps, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{))}
+
+\CommentTok{# Calculate the mean and median for the daily step total}
+\NormalTok{new_stepmean <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(na_step_total$Steps)}
+\NormalTok{new_stepmedian <-}\StringTok{ }\KeywordTok{median}\NormalTok{(na_step_total$Steps)}
+
+\CommentTok{# Create a histogram with the total step data}
+\KeywordTok{hist}\NormalTok{(na_step_total$Steps,}\DataTypeTok{breaks=}\DecValTok{15}\NormalTok{, }\DataTypeTok{col=}\StringTok{'yellow'}\NormalTok{, }\DataTypeTok{main =} \StringTok{'Total Daily Steps'}\NormalTok{,}
+     \DataTypeTok{xlab=}\StringTok{'Total Steps'}\NormalTok{, }\DataTypeTok{ylab =}\StringTok{'Frequency'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{FitbitTracker_files/figure-latex/recalculate-1.pdf}
+
+The new \textbf{mean} daily step count is 10766.189 and the
+\textbf{median} is 10766.189.\\
+This clearly shows that the presence of the missing values in the
+original data set has shifted the overall mean daily step count down by
+1411.959 steps.\\
+Filling these missing values in has also meant the current data show a
+\textbf{normal distribution} (no skew) where the median and mean are the
+same. Previously, the missing values caused the data to show a
+\textbf{negative skew}.
+
+\section{Are there differences in activity patterns between weekdays and
+weekends?}\label{are-there-differences-in-activity-patterns-between-weekdays-and-weekends}
+
+1.Create a new factor variable in the dataset with two levels --
+``weekday'' and ``weekend'' indicating whether a given date is a weekday
+or weekend day.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Add a new empty column and name it 'Weekday'}
+\NormalTok{na_dataset[,}\DecValTok{4}\NormalTok{] <-}\StringTok{ }\OtherTok{NA}
+\KeywordTok{colnames}\NormalTok{(na_dataset)[}\DecValTok{4}\NormalTok{] <-}\StringTok{ 'Weekday'}
+
+\CommentTok{# Loop through each of the data set entries}
+
+\NormalTok{for (i in }\DecValTok{1}\NormalTok{:(}\KeywordTok{dim}\NormalTok{(na_dataset)[}\DecValTok{1}\NormalTok{])) \{}
+  \CommentTok{# Check if the day is a saturday or sunday}
+  \NormalTok{if ((}\KeywordTok{weekdays}\NormalTok{(na_dataset$date[i]) ==}\StringTok{ 'Saturday'}\NormalTok{)|(}\KeywordTok{weekdays}\NormalTok{(na_dataset$date[i]) ==}\StringTok{ 'Sunday'}\NormalTok{))\{}
+    \CommentTok{# If so, label as a weekend}
+    \NormalTok{na_dataset$Weekday[i] <-}\StringTok{  'Weekend'}\NormalTok{\}}
+  \CommentTok{# If not a weekend, label as a weekday}
+  \NormalTok{else \{na_dataset$Weekday[i] =}\StringTok{ 'Weekday'}\NormalTok{\}\}}
+
+\CommentTok{#Convert to a factor variable}
+\NormalTok{na_dataset$Weekday <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(na_dataset$Weekday)}
+\KeywordTok{head}\NormalTok{(na_dataset)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    steps       date interval Weekday
+## 1 1.7170 2012-10-01        0 Weekday
+## 2 0.3396 2012-10-01        5 Weekday
+## 3 0.1321 2012-10-01       10 Weekday
+## 4 0.1509 2012-10-01       15 Weekday
+## 5 0.0755 2012-10-01       20 Weekday
+## 6 2.0943 2012-10-01       25 Weekday
+\end{verbatim}
+
+Above are the top 6 cases of the new data set with the additional
+\textbf{Weekday} variable.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  We now want to see graphically whetehr the average steps at each
+  interval period vary between weekend days and weekdays.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Group data by weekend variable and interval}
+\NormalTok{weekday_grouped <-}\StringTok{ }\KeywordTok{group_by}\NormalTok{(na_dataset, Weekday, interval)}
+\CommentTok{# Daily step total for each weekday variable and interval}
+\NormalTok{weekend_step_total <-}\StringTok{ }\KeywordTok{summarise}\NormalTok{(weekday_grouped,}\DataTypeTok{Steps=}\KeywordTok{mean}\NormalTok{(steps, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{))}
+
+\CommentTok{#Create a panel plot to show weekend and weekday data seperatly.}
+\KeywordTok{xyplot}\NormalTok{(weekend_step_total$Steps ~}\StringTok{ }\NormalTok{weekend_step_total$interval |}\StringTok{ }\NormalTok{weekend_step_total$Weekday, }\DataTypeTok{type=}\StringTok{'l'}\NormalTok{, }\DataTypeTok{layout=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{xlab =} \StringTok{'Time Interval'}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{'Total Step Count'}\NormalTok{, }\DataTypeTok{lwd=}\FloatTok{2.5}\NormalTok{, }\DataTypeTok{col=}\StringTok{'red'}\NormalTok{, }\DataTypeTok{main=}\StringTok{'Daily Step Count for the Weekend and Weekdays'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{FitbitTracker_files/figure-latex/panel plot-1.pdf}
+
+
+\end{document}

@@ -1,0 +1,110 @@
+---
+title: 'Guinea Pigs Tooth Length: Effect of Vitamin C'
+author: "Rebeca Elizabeth Kitching"
+date: "May, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+Here we are going to examine the Tooth Growth dataset in R which examines the effect of vitamin C, specifically its dose and delivery method (Supplement), on the tooth length of Guinea Pigs. Each animal received a dose of either 0.5, 1 or 2 mg/day which was delivered using 1 of 2 delivery systems; in orange juice or ascorbic acid.
+
+## Load in the data set
+
+```{r Load, message=FALSE}
+# Load in requires R packages
+library(ggplot2);library(plyr);library(dplyr);library(grid)
+# We now load in the tooth growth dataset
+tooth <- ToothGrowth
+tooth$dose <- as.factor(tooth$dose)
+```
+## Data Summary
+
+We next want to look at a summary of the data to get a rough idea about what it is showing.
+```{r}
+# Here we look at the number of cases for each level of our IVs
+table(tooth$supp,tooth$dose)
+# Summarise the DV Tooth length
+summary(tooth$len)
+```
+
+From the above output, we can see there are 2 vitamin C supplements as expected (OJ; Orange Juice. VC; Ascorbic Acid) which each have 30 cases. There are also three doses of VC (0.5, 1 and 2) with 20 cases each. Cases were evenly collected across the conditions providing 10 cases for each supplement and dose combination.We can see there is also a single dependent variable called Length which corresponds to the tooth length measured. This length has an overall mean of 18.81 with a range of 4.20 to 33.90.
+
+## Plotting the data
+
+We can also observe the means for both supplement type and each dosage using a plot. 
+
+``` {r Means, fig.width=6, fig.height=4}
+# Group the data by both IVs to allow us to plot by these variables
+tooth <- group_by(tooth, supp,dose)
+# Average across each of the 10 cases for each Dose/Supplement combination.
+toothmeans <- summarise(tooth,Mean=mean(len),SD=sd(len))
+# Plot data on a bar chart
+g <- ggplot(toothmeans, aes(supp,Mean, fill=factor(dose)))
+g + geom_bar(stat='identity', position='dodge', color = 'black')+
+  geom_errorbar(aes(ymin = (toothmeans$Mean-toothmeans$SD),
+                    ymax=(toothmeans$Mean+toothmeans$SD)),
+                position=position_dodge(.9),width=0.5)+
+  xlab('Suppliment')+
+  ylab("Mean Tooth length")+
+  ggtitle("Tooth length from Vitamin C suppliments of varying doses")+
+  theme_light()+
+  theme(axis.title.x = element_text(margin = margin(b = 30),face = "bold",
+                                    color = "black",size = 14, vjust=-5),
+        axis.title.y = element_text(margin = margin(l = 30),face = "bold",
+                                    color = "black", size = 14, vjust=7))+
+  theme(axis.text.x = element_text(color = "black", size = 10,face='bold'),
+        axis.text.y = element_text(color = "black", size = 10,face='bold'))+
+  theme(legend.title = element_text(color = "black", size = 12),
+        legend.key.size =unit(1.5, 'line'),
+        legend.text = element_text(color = "black", size = 9))+
+  scale_fill_manual("Dose", values = c("slategray2","lightsteelblue3","steelblue2"))+
+  scale_x_discrete(labels=c("OJ" = "Orange Juice", "VC" = "Ascorbic Acid"))+
+  labs(caption = "Error bars represent ±1 Standard Deviation")
+```
+
+Above we can see that higher doses of either supplement result in a longer tooth length. We can also see that there may be differences between supplement type, but only as the lower doses of Vitamin C. 
+
+##How do Supplement and Dose effect Tooth Growth: Statistical Tests
+
+So we can observe from the above plot that there may be differences in our dataset, so we now need to test whether these differences are statistically significant. Although, a mixed ANOVA would be more appropriate in this instance, we will be using independent sample t-tests.
+
+**1. Is there an overall significant effect of Supplement on tooth growth, controlling for dose.**
+
+```{r}
+# T-test to compare supplement types at all dose levels
+test1 <- t.test(len~supp, paired=F, var.equal=T, data=tooth)
+test1$p.value
+```
+We can see here that there just fails to be a statistically significant difference between both Orange juice and Ascorbic Acid with a p-value of `r test1$p.value`.
+
+**2. Is there a significant difference in Supplement type on tooth growth at each dose level.**
+
+Here we now look at each of the three doses seperatly to see whether the effect of supplement is dependent on the vitamin dose.
+
+```{r, tidy=TRUE}
+options(digits = 4)
+# T-test to compare supplement types at 0.5mg/day dosage
+t05 <- t.test(len ~ supp, 
+              data = rbind(tooth[(tooth$dose == 0.5) &  (tooth$supp == "OJ"),],
+                           tooth[(tooth$dose == 0.5) & (tooth$supp == "VC"),]), var.equal = T)
+# T-test to compare supplement types at 1mg/day dosage
+t1 <- t.test(len ~ supp, 
+             data = rbind(tooth[(tooth$dose == 1) &  (tooth$supp == "OJ"),],
+                          tooth[(tooth$dose == 1) & (tooth$supp == "VC"),]), var.equal = T)
+# T-test to compare supplement types at 2mg/day dosage
+t2 <- t.test(len ~ supp, 
+             data = rbind(tooth[(tooth$dose == 2) &  (tooth$supp == "OJ"),],
+                          tooth[(tooth$dose == 2) & (tooth$supp == "VC"),]), var.equal = T)
+# Assign the pvalues and confidence intervals to a data frame to display
+datasummary <- data.frame(Dose=c(0.5,1,2), Pvalue =c(t05$p.value,t1$p.value,t2$p.value),
+                          LowerCI=c(t05$conf.int[1],t1$conf.int[1],t2$conf.int[1]),UpperCI=c(t05$conf.int[2],t1$conf.int[2],t2$conf.int[2]))
+datasummary
+```
+
+As we can see in the above table, there is a significant difference between supplement types only when the dose remained at 0.5 and 1 mg/day. However when doses reached 2 mg/day, there was no difference between supplement types.
+
+## Conclusion
+
+**From the above data analysis, we can see there there is no overall effect of Supplement on Tooth growth. However, when we examine the difference between supplements at each dose level, a different picture appears. Here we can say that at lower doses of 1 or less, Orange Juice increases tooth length significantly more than Ascorbic Acid. At higher doses however, there is no difference between supplement types**
+
+**It must be noted however though that these findings are based on the assumption that the data groups examined have equal variance. Additionaly, since we have tested these hypotheses using multiple t-tests rather than a single ANOVA, we may have introduced family wise error.However, when we correct the alpha value using bonferroni correction to control for family wise error, giving a value of `r 0.05/4` (alpha-value/number of tests), we can still see that the difference in supplements at 0.5 and 1 mg/day dosages falls below this new alpha level**

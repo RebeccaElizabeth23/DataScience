@@ -1,0 +1,66 @@
+---
+title: "Relationship between Transmission type and MPG?"
+author: "Rebecca Elizabeth Kitching"
+date: "June 2018"
+output: pdf_document
+---
+We look here at the Mtcars data set to explore the effect of transmission type on miles per gallon (MPG).Here we wish to answer two questions:
+**(1) Is an automatic or manual transmission better for MPG?**
+**(2) Quantify the MPG difference between automatic and manual transmissions.**
+
+Variables include:
+MPG -	Miles/(US) gallon,   CYL -	Number of cylinders,   DISP -	Displacement (cu.in.),
+HP -	Gross horsepower,    DRAT -	Rear axle ratio,     WT -	Weight (1000 lbs),
+QSEC -	Acceleration (1/4 mile time),     VS -	V/S,                   AM -	Transmission ,
+GEAR-	Number of forward gears,   CARB-	Number of carburetors.
+```{r, echo=FALSE}
+options(scipen = 999, digits = 5)
+```
+# Exploratory Analysis
+Here we first want to explore the relationships between MPG and all the car attributes.
+```{r Explore plot ,fig.width=6.5, fig.height=2.50}
+par(mfrow=c(2,5),mar=c(3.90, 4.25, 1, 0))
+for (variables in 2:11){thisvar = mtcars[,variables]
+  plot(thisvar, mtcars$mpg, xlab = names(mtcars[variables]), ylab='MPG')
+  abline(lm(mtcars$mpg ~ thisvar))}
+```
+We can see that Rear axle ratio, Accelearation, V/S, Transmission and No.Gears were positivly associated with MPG while No.Cylinders, Displacement, HP, Weight and No.Carburetors are negatively related.
+
+# Is an automatic or manual transmission better for MPG?
+Here we first want to analyse which transmission type (Automatic or Manua) shows the higher MPG rating, without considering any other variables. This will be done using a simple linear model between the 2 variable.
+```{r simple regression}
+basicmodel <- lm(mpg ~ factor(am), data=mtcars)
+summary(basicmodel)$coef;summary(basicmodel)$r.squared
+```
+From the above, when just examining the relationship between Transmission  and MPG, automatics have an avergae MPG of 17.15 while manuals have an extra 7.25 MPG with an average of `r 17.147+7.245`. We can therefore say Manual transmissions are better for MPG (Appendix Figure.1). However, the $R^2$ value shows Tramsission only explains 33.85% of the MPG variance, suggesting other motor attributes are involved.
+
+# Quantify the MPG difference between transmissions types
+There is a clear relationship between transmission type and MPG, however we now want to investigate whether this relationship changes when other car attributes are taken into consideration. 
+Here we conduct a backwards step-wise analysis where we start by modelling all variables and gradually remove one at each step to find a model with a smaller AIC value; suggesting a better model fit.
+```{r results="hide" }
+fullmodel <- lm(mpg ~ ., data=mtcars); idealmodel <- step(fullmodel, direction = "backward")
+```
+```{r}
+summary(fullmodel)$coef;summary(fullmodel)$r.squared
+summary(idealmodel)$coef;summary(idealmodel)$r.squared
+```
+From the above we can see the full model with all variable can explain 86.90% of the data, however the model has a higher AIC value compared to the ideal model suggesting a worse fit. Whilst the ideal model explains slight less variance at 85.00%, it only contains 3 variables so is less likely to have problems with variable inflation. residual plots for this model can be seen in Appendix Figure2.
+From this ideal model, we can see that transmission continues to significantly predict (p<.05) MPG when weight and accelearation is taken into consideration, however there is a smaller difference. Here manual cars have an extra 2.94 MPG compared to automatic cars.
+
+# Conclusion
+Transmission type shows a significant effect on MPG where manual cars have an extra 2.94 MPG compared to automatics. However, this relationship also depends on weight and acceleration which also influence MPG.
+
+# Appendix Figures
+
+```{r , fig.width=5, fig.height=4,fig.align='center',tidy=TRUE}
+plot(mtcars$mpg ~ factor(mtcars$am), ylab = 'Miles Per Gallon (MPG)', xlab='Transmission Type', names=c("Automatic","Manual"), col=c("lightcoral","lightblue"))
+```
+Figure 1: Box plot showing differences in MPG ratings for both automatic and manual transmission cars.  
+  
+    
+    
+```{r,fig.width=5, fig.height=4,fig.align='center'}
+par(mfrow=c(2,2),mar=c(4, 4.5, 2, 2))
+plot(idealmodel)
+```
+Figure 2: Residual plots of the Ideal model; modelling Transmission type, Acceleration adn Weight to predict MPG.
