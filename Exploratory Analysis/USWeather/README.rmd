@@ -1,0 +1,3 @@
+# *US Weather*
+
+Using information from the National Weather Service of NOAA reporting each weather event and damage within the US, can we explore which are the most costly weather types to both Human health and the economy.
